@@ -3,6 +3,10 @@ use sysinfo::{
 };
 
 // use ocl::{Platform, Device};
+
+use display_info::DisplayInfo;
+use std::time::Instant;
+
 struct Ram {
     base_total_ram: u64,
     base_used_ram: u64,
@@ -11,18 +15,18 @@ struct Ram {
     metric_prefix: String,
 }
 
-impl Default for Ram {
-    fn default() -> Self {
-        Ram{
-            base_total_ram: 0,
-            base_used_ram: 0,
-            total_ram: 0.0,
-            used_ram: 0.0,
-            metric_prefix: String::from("bytes")
-
-        }
-    }
-}
+// impl Default for Ram {
+//     fn default() -> Self {
+//         Ram{
+//             base_total_ram: 0,
+//             base_used_ram: 0,
+//             total_ram: 0.0,
+//             used_ram: 0.0,
+//             metric_prefix: String::from("bytes")
+//
+//         }
+//     }
+// }
 
 impl Ram {
     fn new(base_total_ram: u64, base_used_ram: u64, total_ram: f64, used_ram: f64) -> Ram {
@@ -55,8 +59,12 @@ impl Ram {
 }
 
 fn main() {
+    let start = Instant::now();
+
     let mut sys = System::new_all();
     sys.refresh_all();
+    let display_infos = DisplayInfo::all().unwrap();
+
     // let platform = Platform::default(); // Pick the default platform
     // let devices = platform.vendor().unwrap();
     // //let devices = platform.devices(ocl::flags::DEVICE_TYPE_GPU).unwrap();
@@ -85,4 +93,15 @@ fn main() {
     println!("Host Name: {:>d$}", host, d = distance);
     println!("Memory: {:>d$.2} {}  / {:>d$.2} {}", ram.used_ram(), ram.metric_prefix, ram.total_ram(), ram.metric_prefix, d=distance);
     println!("Processor: {}", sys.cpus()[0].brand());
+
+    //println!("Display: {:#?}", display_infos[0]);
+
+    println!("Monitor: {}", display_infos[0].friendly_name);
+    println!("Display: {} x {} @ {}", display_infos[0].width, display_infos[0].height, display_infos[0].frequency);
+
+
+
+
+    println!("Time: {:?}", start.elapsed());
+
 }

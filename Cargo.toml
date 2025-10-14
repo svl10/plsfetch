@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 sysinfo =   "0.37.2"
 ocl = "0.19.7"
+display-info = "0.5.6"
