@@ -61,14 +61,14 @@ fn main() {
     // let devices = platform.vendor().unwrap();
     // //let devices = platform.devices(ocl::flags::DEVICE_TYPE_GPU).unwrap();
     // println!("Available devices: {:?}", devices);
-    //
-    // let mut ram = Ram{
-    //     base_total_ram: sys.total_memory(),
-    //     base_used_ram: sys.used_memory(),
-    //     total_ram: sys.total_memory() as f64,
-    //     used_ram: sys.used_memory() as f64,
-    //     metric_prefix: String::from("bytes"),
-    //     };
+
+    let mut ram = Ram{
+        base_total_ram: sys.total_memory(),
+        base_used_ram: sys.used_memory(),
+        total_ram: sys.total_memory() as f64,
+        used_ram: sys.used_memory() as f64,
+        metric_prefix: String::from("bytes"),
+        };
 
     // Uncomment if you want to change prefix to mb or gb
     //ram.to_mb();
