@@ -1,8 +1,29 @@
 use sysinfo::{
-    System,
+    System, Pid,
 };
+use gfx_hal::{
+    adapter::Adapter,
+    Instance
+};
+use gfx_backend_vulkan as backend;
 use display_info::DisplayInfo;
 use std::time::Instant;
+
+fn get_gpus() -> Vec<String> {
+
+let instance: gfx_backend_vulkan::Instance =
+backend::Instance::create("hayabusa", 1).unwrap();
+let adapters: Vec<Adapter<backend::Backend>> = instance.enumerate_adapters();
+
+let mut names: Vec<String> = Vec::new();
+
+for adapter in adapters {
+names.push(adapter.info.name.to_string());
+}
+
+names
+}
+
 
 struct Ram {
     base_total_ram: u64,
@@ -60,15 +81,16 @@ fn main() {
 
     let name = System::name().unwrap();
     let host = System::host_name().unwrap();
+    let gpu = get_gpus()[0].clone();
 
 
     println!("System Name: {:>d$}", name, d = distance);
     println!("Host Name: {:>d$}", host, d = distance);
     println!("Memory: {:>d$.2} {} / {:>d$.2} {}", ram.used_ram(), ram.metric_prefix, ram.total_ram(), ram.metric_prefix, d=distance);
     println!("Processor: {}", sys.cpus()[0].brand());
+    println!("GPUs: {}", gpu);
     println!("Monitor: {}", display_infos[0].friendly_name);
     println!("Display: {} x {} @ {}hz", display_infos[0].width, display_infos[0].height, display_infos[0].frequency);
-
 
 
     println!("Time: {:?}", start.elapsed());
