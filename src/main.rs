@@ -1,61 +1,3 @@
-use sysinfo::{
-    System, Pid,
-};
-use gfx_hal::{
-    adapter::Adapter,
-    Instance
-};
-use gfx_backend_vulkan as backend;
-use display_info::DisplayInfo;
-use std::time::Instant;
-
-fn get_gpus() -> Vec<String> {
-
-let instance: gfx_backend_vulkan::Instance =
-backend::Instance::create("hayabusa", 1).unwrap();
-let adapters: Vec<Adapter<backend::Backend>> = instance.enumerate_adapters();
-
-let mut names: Vec<String> = Vec::new();
-
-for adapter in adapters {
-names.push(adapter.info.name.to_string());
-}
-
-names
-}
-
-
-struct Ram {
-    base_total_ram: u64,
-    base_used_ram: u64,
-    total_ram: f64,
-    used_ram: f64,
-    metric_prefix: String,
-}
-
-impl Ram {
-
-    fn total_ram(&self) -> f64 {
-        self.total_ram
-    }
-    fn used_ram(&self) -> f64 {
-        self.used_ram
-    }
-
-    fn set_to_mb(&mut self) {
-        self.total_ram = self.base_total_ram as f64 / 1024.0 / 1024.0;
-        self.used_ram = self.base_used_ram as f64 / 1024.0 / 1024.0;
-        self.metric_prefix = String::from("MB");
-    }
-
-    fn set_to_gb(&mut self) {
-        self.total_ram = self.base_total_ram as f64 / 1024.0 / 1024.0 / 1024.0;
-        self.used_ram = self.base_used_ram as f64 / 1024.0 / 1024.0 / 1024.0;
-        self.metric_prefix = String::from("GB");
-    }
-
-
-}
 
 fn main() {
     let start = Instant::now();
@@ -94,5 +36,66 @@ fn main() {
 
 
     println!("Time: {:?}", start.elapsed());
+
+}
+
+
+
+
+use sysinfo::{
+    System, Pid,
+};
+use gfx_hal::{
+    adapter::Adapter,
+    Instance
+};
+use gfx_backend_vulkan as backend;
+use display_info::DisplayInfo;
+use std::time::Instant;
+
+fn get_gpus() -> Vec<String> {
+
+    let instance: gfx_backend_vulkan::Instance = backend::Instance::create("Graphics", 1).unwrap();
+    let adapters: Vec<Adapter<backend::Backend>> = instance.enumerate_adapters();
+
+    let mut names: Vec<String> = Vec::new();
+
+    for adapter in adapters {
+        names.push(adapter.info.name.to_string());
+    }
+
+    names
+}
+
+
+struct Ram {
+    base_total_ram: u64,
+    base_used_ram: u64,
+    total_ram: f64,
+    used_ram: f64,
+    metric_prefix: String,
+}
+
+impl Ram {
+
+    fn total_ram(&self) -> f64 {
+        self.total_ram
+    }
+    fn used_ram(&self) -> f64 {
+        self.used_ram
+    }
+
+    fn set_to_mb(&mut self) {
+        self.total_ram = self.base_total_ram as f64 / 1024.0 / 1024.0;
+        self.used_ram = self.base_used_ram as f64 / 1024.0 / 1024.0;
+        self.metric_prefix = String::from("MB");
+    }
+
+    fn set_to_gb(&mut self) {
+        self.total_ram = self.base_total_ram as f64 / 1024.0 / 1024.0 / 1024.0;
+        self.used_ram = self.base_used_ram as f64 / 1024.0 / 1024.0 / 1024.0;
+        self.metric_prefix = String::from("GB");
+    }
+
 
 }
