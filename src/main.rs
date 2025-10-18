@@ -1,4 +1,3 @@
-
 fn main() {
     let start = Instant::now();
 
