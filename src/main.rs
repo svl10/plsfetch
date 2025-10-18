@@ -42,7 +42,7 @@ fn main() {
 
 
 use sysinfo::{
-    System, Pid,
+    System
 };
 use gfx_hal::{
     adapter::Adapter,
