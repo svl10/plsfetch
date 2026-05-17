@@ -13,7 +13,7 @@ pub fn run() -> Result<(), Box<dyn Error>>{
     
     println!("System Name: {}", sysinfo.sys_name());
     println!("Host Name: {}", sysinfo.host_name());
-    println!("Uptime: {:?}", start.elapsed());
+    println!("Fetch Time: {:?}", start.elapsed());
     println!("{}", display_info);
     println!("{}", monitor);
     println!("CPU: {}", sysinfo.cpu_name());
