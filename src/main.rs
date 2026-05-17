@@ -1,10 +1,4 @@
 fn main() {
-    let start = Instant::now();
-
-    let mut sys = System::new_all();
-    sys.refresh_all();
-    let display_infos = DisplayInfo::all().unwrap();
-
     let mut ram = Ram {
         base_total_ram: sys.total_memory(),
         base_used_ram: sys.used_memory(),
@@ -45,11 +39,8 @@ fn main() {
     println!("Time: {:?}", start.elapsed());
 }
 
-use display_info::DisplayInfo;
 use gfx_backend_vulkan as backend;
 use gfx_hal::{adapter::Adapter, Instance};
-use std::time::Instant;
-use sysinfo::System;
 
 fn get_gpus() -> Vec<String> {
     let instance: gfx_backend_vulkan::Instance = backend::Instance::create("Graphics", 1).unwrap();
