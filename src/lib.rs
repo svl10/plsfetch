@@ -10,10 +10,10 @@ pub fn run() -> Result<(), Box<dyn Error>>{
     let (display_info, monitor) = displayinfo::displayinfo();
     let gpu = gpus::get_gpus();
     let sysinfo = systeminfo::systeminfo();
-    
+
     let system_name = String::from(format!("System Name: {}", sysinfo.sys_name()));
     let host_name = String::from(format!("Host Name: {}", sysinfo.host_name())); 
-    let fetch_time = String::from(format!("Fetch Time: {:?}", start.elapsed()));
+    let fetch_time = String::from(format!("Fetch Time: {:.4}s", start.elapsed().as_secs_f32()));
     let display_info = String::from(format!("{}", display_info));
     let monitor = String::from(format!("{}", monitor));
     let cpu = String::from(format!("CPU: {}", sysinfo.cpu_name()));
