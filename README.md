@@ -4,7 +4,8 @@
 A fast and customizable system fetching tool written in Rust. Similar to neofetch and fastfetch.
 <br>
 
-## Prerequisites
+---
+### Prerequisites
 
 - **Rust** 
   - Install via [rustup](https://rustup.rs/):
@@ -16,6 +17,7 @@ A fast and customizable system fetching tool written in Rust. Similar to neofetc
     rustc --version
     cargo --version
     ```
+    
 
 ## Installation
 
