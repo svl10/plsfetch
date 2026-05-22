@@ -30,7 +30,7 @@ pub fn run() -> Result<(), Box<dyn Error>>{
         gpu,
         memory
     ];
-    let (ascii_art, mut width) = ascii::cat_sit();
+    let (ascii_art, mut width) = ascii::twob_heh();
     width += 3;
 
     for i in 0..ascii_art.len().max(info.len()){
