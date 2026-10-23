@@ -21,7 +21,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build plsfetch
-        run: cargo build --release --locked
+        run: cargo build --release
 
       - name: Verify binary
         run: |
