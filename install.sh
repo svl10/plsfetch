@@ -2,68 +2,64 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-REPO="svl10/plsfetch"
-VERSION="v0.1.1"
-INSTALL_DIR="${HOME}/.local/bin"
-BINARY="plsfetch"
+REPO="https://github.com/svl10/plsfetch.git"
+INSTALL_DIR="${CARGO_HOME:-$HOME/.cargo}/bin"
 
-info() { printf '[plsfetch] %s\n' "$*"; }
-die() { printf '[plsfetch] Error: %s\n' "$*" >&2; exit 1; }
+info() { printf '\033[1;34m[INFO]\033[0m %s\n' "$*"; }
+error() { printf '\033[1;31m[ERROR]\033[0m %s\n' "$*" >&2; }
 
-# Check operating system
-OS="$(uname -s)"
-ARCH="$(uname -m)"
-
-if [[ "$OS" != "Linux" ]]; then
-    die "This installer currently supports Linux only."
+# Check required download utility
+if ! command -v curl >/dev/null 2>&1; then
+    error "curl is required. Please install curl and try again."
+    exit 1
 fi
 
-case "$ARCH" in
-    x86_64|amd64) ;;
-    *) die "Unsupported architecture: $ARCH (currently supports x86_64)." ;;
-esac
+# Install Rust and Cargo if missing
+if ! command -v cargo >/dev/null 2>&1; then
+    info "Rust/Cargo not found. Installing Rust using rustup..."
 
-# Check download utility
-if command -v curl >/dev/null 2>&1; then
-    DOWNLOAD="curl"
-elif command -v wget >/dev/null 2>&1; then
-    DOWNLOAD="wget"
-else
-    die "Please install curl or wget first."
+    if ! command -v sh >/dev/null 2>&1; then
+        error "sh is required to install Rust."
+        exit 1
+    fi
+
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
+        -o "${TMPDIR:-/tmp}/plsfetch-rustup.sh"
+
+    sh "${TMPDIR:-/tmp}/plsfetch-rustup.sh" -y
+    rm -f "${TMPDIR:-/tmp}/plsfetch-rustup.sh"
+
+    export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
-URL="https://github.com/${REPO}/releases/download/${VERSION}/plsfetch"
-TMP="$(mktemp)"
-trap 'rm -f "$TMP"' EXIT
-
-info "Downloading plsfetch ${VERSION}..."
-
-if [[ "$DOWNLOAD" == "curl" ]]; then
-    curl -fL --retry 3 "$URL" -o "$TMP" ||
-        die "Download failed. Check that the release contains the plsfetch asset."
-else
-    wget -O "$TMP" "$URL" ||
-        die "Download failed. Check that the release contains the plsfetch asset."
+# Verify Cargo is available
+if ! command -v cargo >/dev/null 2>&1; then
+    error "Cargo is unavailable. Add ~/.cargo/bin to your PATH."
+    exit 1
 fi
 
-# Check that the downloaded file is an executable, not an error page
-file_type="$(file -b "$TMP" 2>/dev/null || true)"
-if [[ "$file_type" != *ELF* ]]; then
-    die "Downloaded file is not a Linux executable: $file_type"
-fi
+info "Rust version: $(rustc --version)"
+info "Installing plsfetch from GitHub..."
 
+# Build and install the application
+cargo install --git "$REPO"
+
+# Ensure the installed binary directory is on PATH
 mkdir -p "$INSTALL_DIR"
-install -m 755 "$TMP" "${INSTALL_DIR}/${BINARY}"
 
-info "Installed to ${INSTALL_DIR}/${BINARY}"
-
-case ":${PATH}:" in
-    *":${INSTALL_DIR}:"*) ;;
+case ":$PATH:" in
+    *":$INSTALL_DIR:"*) ;;
     *)
-        info "Add this to your shell configuration:"
+        export PATH="$INSTALL_DIR:$PATH"
+        info "Add this to your shell configuration if needed:"
         printf 'export PATH="%s:$PATH"\n' "$INSTALL_DIR"
         ;;
 esac
 
-info "Installation complete!"
-info "Run: ${INSTALL_DIR}/${BINARY}"
+if command -v plsfetch >/dev/null 2>&1; then
+    info "plsfetch installed successfully!"
+    plsfetch
+else
+    info "Installation finished. Run this command to start:"
+    printf '  %s/plsfetch\n' "$INSTALL_DIR"
+fi
