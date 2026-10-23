@@ -1,4 +1,3 @@
-
 name: Build plsfetch releases
 
 on:
@@ -24,7 +23,12 @@ jobs:
       - name: Build plsfetch
         run: cargo build --release --locked
 
-      - name: Publish GitHub Release
+      - name: Verify binary
+        run: |
+          test -f target/release/plsfetch
+          file target/release/plsfetch
+
+      - name: Upload binary to release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
