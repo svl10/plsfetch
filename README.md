@@ -5,21 +5,26 @@ A fast and customizable system fetching tool written in Rust. Similar to neofetc
 <br>
 
 ---
+## How to Install
+Run
+```bash
+curl -fsSL https://raw.githubusercontent.com/svl10/plsfetch/master/install.sh | bash
+```
+
+## Manual Installation
+
 ### Prerequisites
 
 - **Rust** 
   - Install via [rustup](https://rustup.rs/):
     ```bash
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-    ```
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh```
 - Ensure `cargo` is in your PATH:
     ```bash
     rustc --version
     cargo --version
     ```
     
-
-## Installation
 
 Install plsfetch with cargo
 
